@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct GitHubProfileViewerApp: App {
+    @StateObject var model = GitHubViewModel()
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(model)
         }
     }
 }

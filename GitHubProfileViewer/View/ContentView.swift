@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var userName:String = ""
-    @StateObject var vm = GitHubViewModel()
+    @EnvironmentObject var vm:GitHubViewModel
     var body: some View {
         NavigationStack {
             VStack{
@@ -36,8 +36,24 @@ struct ContentView: View {
                     Spacer()
                 }
                 
-                //Text("User Name: \(vm.user.name)")
-               // Text("Followers: \(vm.user.followers)")
+                Spacer()
+                
+                switch vm.state {
+                case .idle:
+                    EmptyView()
+                    
+                case .loading:
+                    ProgressView("Loading...")
+                    
+                case .success:
+                    // vista del user
+                    UserProfileView(user: vm.user)
+                    
+                case .error:
+                    Text("Error")
+                }
+                
+
                 
                 Spacer()
                 
@@ -52,5 +68,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView().environmentObject(GitHubViewModel())
 }
