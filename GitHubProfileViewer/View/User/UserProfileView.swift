@@ -68,7 +68,7 @@ struct UserProfileView: View {
                         
                         if model.repos.count != 0 {
                             ForEach(model.repos.prefix(2),id:\.id) { repo in
-                                RepositoryView(name: repo.name, language: repo.language ?? "N/A")
+                                RepositoryRowView(repo: repo,showAll: false)
                             }
                         }else{
                             Text("This user has no repositories")

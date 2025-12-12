@@ -11,7 +11,7 @@ struct ContentView: View {
     @State private var userName:String = ""
     @EnvironmentObject var vm:GitHubViewModel
     private var isUsernameEmpty: Bool {
-        userName.trimmingCharacters(in: .whitespacesAndNewlines) == ""
+        userName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
     
     var body: some View {
@@ -19,11 +19,11 @@ struct ContentView: View {
             ScrollView {
                 VStack{
                     
-                    HStack(spacing: 5){
+                    HStack(spacing: 20){
                         
                         TextFieldUser(userName: self.$userName)
                         
-                        Spacer()
+              
                         Button{
                             vm.fetchAll(username: self.userName)
                         }label: {
@@ -37,11 +37,10 @@ struct ContentView: View {
                         .animation(.interactiveSpring(duration: 1), value: self.isUsernameEmpty)
                         .disabled(self.isUsernameEmpty)
                         
-                        
-                        Spacer()
+                       
                     }
                     
-                    
+                     
                     switch vm.state {
                     case .idle:
                         EmptyView()
@@ -64,7 +63,19 @@ struct ContentView: View {
                 .navigationTitle("GitHub Profile Viewer")
                 .padding()
             }.scrollDismissesKeyboard(.interactively)
-              
+                .toolbar{
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Button {
+                            withAnimation {
+                                vm.reset()
+                                self.userName = ""
+                            }
+                        } label: {
+                            Image(systemName: "arrow.clockwise")
+                        }
+
+                    }
+                }
         }.onAppear{
             if let lastUsername = UserDefaults.standard.string(forKey: "lastUsername") {
                 self.userName = lastUsername
@@ -72,6 +83,9 @@ struct ContentView: View {
             }
         }
     }
+    
+    
+    
 }
 
 

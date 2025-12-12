@@ -125,6 +125,13 @@ final class GitHubViewModel:ObservableObject{
     }
     
     
+    func reset(){
+        user = GitHubUser(name: "", avatar_url: "", followers: 0, public_repos: 0)
+        repos = []
+        followers = []
+        state = .idle
+        UserDefaults.standard.removeObject(forKey: "lastUsername")
+    }
 
     
 }
