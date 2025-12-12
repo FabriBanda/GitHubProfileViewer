@@ -64,6 +64,12 @@ struct ContentView: View {
                 .navigationTitle("GitHub Profile Viewer")
                 .padding()
             }.scrollDismissesKeyboard(.interactively)
+              
+        }.onAppear{
+            if let lastUsername = UserDefaults.standard.string(forKey: "lastUsername") {
+                self.userName = lastUsername
+                vm.fetchAll(username: lastUsername)
+            }
         }
     }
 }

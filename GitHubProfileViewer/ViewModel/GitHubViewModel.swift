@@ -68,6 +68,7 @@ final class GitHubViewModel:ObservableObject{
                         self.state = .success
                         self.getRepositories(username: username)
                         self.getFollowers(username: username)
+                        UserDefaults.standard.set(username, forKey: "lastUsername")
                         
                     // error
                     case 404:
@@ -124,5 +125,6 @@ final class GitHubViewModel:ObservableObject{
     }
     
     
+
     
 }
