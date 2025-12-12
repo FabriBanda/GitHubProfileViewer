@@ -13,4 +13,6 @@ struct Repository:Decodable{
     let id: Int
     let name: String
     let language: String?
+    let description: String?
+    let fork:Bool
 }

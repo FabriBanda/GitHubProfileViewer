@@ -10,6 +10,10 @@ import SwiftUI
 struct ContentView: View {
     @State private var userName:String = ""
     @EnvironmentObject var vm:GitHubViewModel
+    private var isUsernameEmpty: Bool {
+        userName.trimmingCharacters(in: .whitespaces) == ""
+    }
+    
     var body: some View {
         NavigationStack {
             VStack{
@@ -24,7 +28,7 @@ struct ContentView: View {
                     
                     Spacer()
                     Button{
-                        vm.fetchAll(username: "FabriBanda")
+                        vm.fetchAll(username: "binizaa")
                     }label: {
                         Image(systemName: "magnifyingglass")
                             .font(.title2)
@@ -32,7 +36,11 @@ struct ContentView: View {
                             .bold()
                     }
                     .padding(10)
-                    .background(Color.blue,in:Circle())
+                    .background(self.isUsernameEmpty ? Color.gray:Color.blue,in:Circle())
+                    .animation(.interactiveSpring(duration: 1), value: self.isUsernameEmpty)
+                    .disabled(self.isUsernameEmpty)
+                    
+                    
                     Spacer()
                 }
                 

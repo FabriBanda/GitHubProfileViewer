@@ -12,113 +12,92 @@ struct UserProfileView: View {
     let user:GitHubUser
     var body: some View {
         
-        VStack(spacing: 15){
-            AsyncImage(url: URL(string: user.avatar_url)) { image in
-                image
-                    .resizable()
-                    .scaledToFill()
-                
-            } placeholder: {
-                ProgressView()
-            }
-            .frame(width: 130, height: 130)
-            .clipShape(Circle())
-            
-            
-            Text(user.name)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-            
-        
-                HStack(spacing: 15){
+        NavigationStack{
+            VStack(spacing: 15){
+                AsyncImage(url: URL(string: user.avatar_url)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
                     
-                    UserElement(color: Color.green, image: "person.fill", number: user.followers,text: "followers")
-                    
-                    UserElement(color: Color.blue, image: "folder.fill", number: user.public_repos,text: "repositories")
-                    
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(width: 130, height: 130)
+                .clipShape(Circle())
+                .onTapGesture {
+                    // sheet con foto ampliada
                 }
                 
-
-            
-            Divider()
-            HStack {
+                Text(user.name)
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
                 
-                VStack(alignment: .leading,spacing: 15){
+                
+                HStack(spacing: 15){
                     
-                    Text("First 2 Repositories")
-                        .font(.title2)
-                        .bold()
+                    UserElement(color: Color.green, image: "person.fill", number: user.followers,text: "followers").onTapGesture {
+                        // sheet con lista de followers
+                    }
                     
-                  
-                    ForEach(model.repos.prefix(2),id:\.id) { repo in
-                        RepositoryView(name: repo.name, language: repo.language ?? "N/A")
+                    UserElement(color: Color.blue, image: "folder.fill", number: user.public_repos,text: "repositories").onTapGesture {
+                        // sheet con lista de repositorios
+                        
+                        
                     }
                     
                 }
                 
-                Spacer()
+                
+                
+                Divider()
+                HStack {
+                    
+                    VStack(alignment: .leading,spacing: 15){
+                        
+                        Text("First 2 Repositories")
+                            .font(.title2)
+                            .bold()
+                        
+                        
+                        ForEach(model.repos.prefix(2),id:\.id) { repo in
+                            RepositoryView(name: repo.name, language: repo.language ?? "N/A")
+                        }
+                        
+                        NavigationLink {
+                            ListRepositoriesView()
+                        } label: {
+                            
+                            Text("Ver mas")
+                                .font(.subheadline)
+                                .foregroundStyle(Color(.systemBackground))
+                                .padding(10)
+                                .background(Color.blue,in:RoundedRectangle(cornerRadius: 20))
+                        }
+                        
+                        
+                        
+                    }
+                    
+                    
+                    
+                    
+                    Spacer()
+                    
+                }
+                
                 
             }
-                
-           
+            .padding()
         }
-        .padding()
-
-  
+        
+        
         
     }
 }
 
-struct RepositoryView: View {
-    let name: String
-    let language: String
 
-    var body: some View {
-        HStack(alignment: .top, spacing: 12) {
 
-            Image(systemName: "folder.fill")
-                .font(.system(size: 20))
-                .foregroundStyle(.blue)
 
-            VStack(alignment: .leading, spacing: 6) {
-                Text(name)
-                    .font(.headline)
-                    .lineLimit(2)
-                    .minimumScaleFactor(0.7)
-
-                Text(language)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-
-            Spacer()
-        }
-        .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(Color.gray.opacity(0.15))
-        )
-    }
-}
-
-struct UserElement:View {
-    let color:Color
-    let image:String
-    let number:Int
-    let text:String
-    var body: some View {
-        HStack{
-            
-            Image(systemName:image)
-                .foregroundStyle(color)
-                .bold()
-            
-            Text("\(number) \(text)")
-            
-        }.font(.headline)
-    }
-}
 
 
 #Preview {
