@@ -3,8 +3,7 @@
 A SwiftUI application that allows users to search for GitHub profiles and display relevant public information using the GitHub REST API.
 This project was developed as a technical test, focusing on clean architecture, proper state management, and modern SwiftUI practices.
 
----
-
+## Preview
 <p align="center">
   <img src="Assets/GitHubProfileViewerImage.png" width="100%" alt="Asset preview">
 </p>
@@ -122,6 +121,12 @@ Only the username is persisted using `UserDefaults`, avoiding unnecessary data s
 - Add unit tests for ViewModel logic
 - Improve accessibility support
 - Cache API responses for better performance
+
+
+## Additional Notes
+### Architecture Pattern
+
+- MVVM (Model–View–ViewModel)
 
 ---
 
