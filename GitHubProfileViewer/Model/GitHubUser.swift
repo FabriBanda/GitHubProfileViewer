@@ -12,6 +12,4 @@ struct GitHubUser:Decodable{
     let avatar_url: String
     let followers: Int
     let public_repos: Int
-    let repos_url: String      
-    let followers_url: String
 }

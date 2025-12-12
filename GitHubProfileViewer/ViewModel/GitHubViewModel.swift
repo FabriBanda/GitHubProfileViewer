@@ -26,16 +26,25 @@ final class GitHubViewModel:ObservableObject{
     // Variables @Published
     @Published var state: ViewState = .idle
     
-    @Published var user:GitHubUser = GitHubUser(name: "", avatar_url: "", followers: 0, public_repos: 0, repos_url: "", followers_url: "")
+    @Published var user:GitHubUser = GitHubUser(name: "", avatar_url: "", followers: 0, public_repos: 0)
     
     @Published var repos:[Repository] = []
+    
+    @Published var followers:[Follower] = []
     
     // MARK: Funciones de fetch
     
     
     func fetchAll(username:String){
+        
+        state = .loading
+        user = GitHubUser(name: "", avatar_url: "", followers: 0, public_repos: 0)
+        repos = []
+        followers = []
+        
         getUser(username: username)
         getRepositories(username: username)
+        getFollowers(username: username)
     }
     
     func getUser(username:String){
@@ -45,7 +54,7 @@ final class GitHubViewModel:ObservableObject{
         Task{
             
             do{
-            
+                
                 self.state = .loading
                 
                 let (data,_) = try await URLSession.shared.data(from: urlUser)
@@ -57,10 +66,11 @@ final class GitHubViewModel:ObservableObject{
                 
             }catch let error as NSError{
                 self.state = .error("Hubo un error al cargar los datos")
-                print("Error: \(error.localizedDescription)")
+                print("Error in user : \(error.localizedDescription)")
             }
             
         }
+        
         
     }
     
@@ -76,7 +86,25 @@ final class GitHubViewModel:ObservableObject{
                 self.repos = json
                 
             }catch let error as NSError{
-                print("Error: \(error.localizedDescription)")
+                print("Error in repos : \(error.localizedDescription)")
+            }
+        }
+        
+    }
+    
+    
+    func getFollowers(username:String){
+        guard let urlFollower = URL(string: "https://api.github.com/users/\(username)/followers") else {return}
+        
+        Task{
+            do{
+                let (data,_) = try await URLSession.shared.data(from: urlFollower)
+                let json = try JSONDecoder().decode([Follower].self, from: data)
+                
+                self.followers = json
+                
+            }catch let error as NSError{
+                print("Error in followers: \(error.localizedDescription)")
             }
         }
         

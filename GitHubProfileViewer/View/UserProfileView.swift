@@ -122,5 +122,5 @@ struct UserElement:View {
 
 
 #Preview {
-    UserProfileView(user: GitHubUser(name: "Fabricio Banda", avatar_url: "https://avatars.githubusercontent.com/u/196128651?v=4", followers: 1, public_repos: 1, repos_url: "", followers_url: "")).environmentObject(GitHubViewModel())
+    UserProfileView(user: GitHubUser(name: "Fabricio Banda", avatar_url: "https://avatars.githubusercontent.com/u/196128651?v=4", followers: 1, public_repos: 1)).environmentObject(GitHubViewModel())
 }
