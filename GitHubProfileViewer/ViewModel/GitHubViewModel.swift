@@ -33,6 +33,11 @@ final class GitHubViewModel:ObservableObject{
     // MARK: Funciones de fetch
     
     
+    func fetchAll(username:String){
+        getUser(username: username)
+        getRepositories(username: username)
+    }
+    
     func getUser(username:String){
         
         guard let urlUser = URL(string: "https://api.github.com/users/\(username)") else {return}
@@ -49,7 +54,6 @@ final class GitHubViewModel:ObservableObject{
                 
                 self.user = json
                 self.state = .success
-                getRepositories(url: self.user.repos_url)
                 
             }catch let error as NSError{
                 self.state = .error("Hubo un error al cargar los datos")
@@ -60,8 +64,9 @@ final class GitHubViewModel:ObservableObject{
         
     }
     
-    func getRepositories(url:String){
-        guard let urlRepository = URL(string: url) else {return}
+    
+    func getRepositories(username:String){
+        guard let urlRepository = URL(string: "https://api.github.com/users/\(username)/repos") else {return}
         
         Task{
             do{

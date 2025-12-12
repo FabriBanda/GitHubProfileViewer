@@ -24,7 +24,7 @@ struct ContentView: View {
                     
                     Spacer()
                     Button{
-                        vm.getUser(username: "FabriBanda")
+                        vm.fetchAll(username: "FabriBanda")
                     }label: {
                         Image(systemName: "magnifyingglass")
                             .font(.title2)
