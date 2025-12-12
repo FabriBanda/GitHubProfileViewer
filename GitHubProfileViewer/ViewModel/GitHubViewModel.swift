@@ -43,8 +43,6 @@ final class GitHubViewModel:ObservableObject{
         followers = []
         
         getUser(username: username)
-        getRepositories(username: username)
-        getFollowers(username: username)
     }
     
     func getUser(username:String){
@@ -57,15 +55,31 @@ final class GitHubViewModel:ObservableObject{
                 
                 self.state = .loading
                 
-                let (data,_) = try await URLSession.shared.data(from: urlUser)
+                let (data,response) = try await URLSession.shared.data(from: urlUser)
                 
-                let json = try JSONDecoder().decode(GitHubUser.self, from: data)
+                if let httpResponse = response as? HTTPURLResponse {
+                    
+                    switch httpResponse.statusCode {
+                        
+                    // success
+                    case 200:
+                        let json = try JSONDecoder().decode(GitHubUser.self, from: data)
+                        self.user = json
+                        self.state = .success
+                        self.getRepositories(username: username)
+                        self.getFollowers(username: username)
+                        
+                    // error
+                    case 404:
+                        self.state = .error("User not found")
+                        
+                    default:
+                        self.state = .error("Server error")
+                    }
+                }
                 
-                self.user = json
-                self.state = .success
-                
-            }catch let error as NSError{
-                self.state = .error("Hubo un error al cargar los datos")
+            }catch let error as URLError{
+                self.state = .error("Connection error")
                 print("Error in user : \(error.localizedDescription)")
             }
             
@@ -73,7 +87,6 @@ final class GitHubViewModel:ObservableObject{
         
         
     }
-    
     
     func getRepositories(username:String){
         guard let urlRepository = URL(string: "https://api.github.com/users/\(username)/repos") else {return}

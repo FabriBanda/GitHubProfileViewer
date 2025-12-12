@@ -42,7 +42,7 @@ struct UserProfileView: View {
                 Text(user.name)
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                
+                    .multilineTextAlignment(.center)
                 
                 HStack(spacing: 15){
                     
@@ -62,14 +62,19 @@ struct UserProfileView: View {
                     
                     VStack(alignment: .leading,spacing: 15){
                         
-                        Text("First 2 Repositories")
+                        Text("Repositories")
                             .font(.title2)
                             .bold()
                         
-                        
-                        ForEach(model.repos.prefix(2),id:\.id) { repo in
-                            RepositoryView(name: repo.name, language: repo.language ?? "N/A")
+                        if model.repos.count != 0 {
+                            ForEach(model.repos.prefix(2),id:\.id) { repo in
+                                RepositoryView(name: repo.name, language: repo.language ?? "N/A")
+                            }
+                        }else{
+                            Text("This user has no repositories")
+                                .font(.headline)
                         }
+                        
                         
                         NavigationLink {
                             ListRepositoriesView()
