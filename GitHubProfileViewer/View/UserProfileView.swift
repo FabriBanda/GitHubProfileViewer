@@ -32,16 +32,8 @@ struct UserProfileView: View {
         
         NavigationStack{
             VStack(spacing: 15){
-                AsyncImage(url: URL(string: user.avatar_url)) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                    
-                } placeholder: {
-                    ProgressView()
-                }
-                .frame(width: 130, height: 130)
-                .clipShape(Circle())
+                ImageView(url: user.avatar_url, size: 130)
+                  
                 .onTapGesture {
             
                     self.activeSheet = .avatar
@@ -105,15 +97,14 @@ struct UserProfileView: View {
             }
             .padding()
             .sheet(item:self.$activeSheet){ item in
-                switch activeSheet {
+                switch item {
                 case .avatar:
                     // view de la imagen del avatar
-                    EmptyView()
+                    AvatarView(url: model.user.avatar_url)
                 case .followers:
                     // view de lista de followers
-                    EmptyView()
-                case nil:
-                    EmptyView()
+                    ListFollowersView()
+             
                 }
             }
         }
