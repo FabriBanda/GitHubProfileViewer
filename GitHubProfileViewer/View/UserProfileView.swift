@@ -10,6 +10,24 @@ import SwiftUI
 struct UserProfileView: View {
     @EnvironmentObject var model:GitHubViewModel
     let user:GitHubUser
+    
+    enum ActiveSheet:Identifiable{
+         case avatar
+         case followers
+        
+        var id:Int{
+            switch self{
+            case .avatar:
+                return 0
+            case .followers:
+                return 1
+            }
+        }
+         
+    }
+    
+    @State private var activeSheet:ActiveSheet?
+    
     var body: some View {
         
         NavigationStack{
@@ -25,7 +43,8 @@ struct UserProfileView: View {
                 .frame(width: 130, height: 130)
                 .clipShape(Circle())
                 .onTapGesture {
-                    // sheet con foto ampliada
+            
+                    self.activeSheet = .avatar
                 }
                 
                 Text(user.name)
@@ -36,14 +55,11 @@ struct UserProfileView: View {
                 HStack(spacing: 15){
                     
                     UserElement(color: Color.green, image: "person.fill", number: user.followers,text: "followers").onTapGesture {
-                        // sheet con lista de followers
+                        
+                        self.activeSheet = .followers
                     }
                     
-                    UserElement(color: Color.blue, image: "folder.fill", number: user.public_repos,text: "repositories").onTapGesture {
-                        // sheet con lista de repositorios
-                        
-                        
-                    }
+                    UserElement(color: Color.blue, image: "folder.fill", number: user.public_repos,text: "repositories")
                     
                 }
                 
@@ -88,6 +104,18 @@ struct UserProfileView: View {
                 
             }
             .padding()
+            .sheet(item:self.$activeSheet){ item in
+                switch activeSheet {
+                case .avatar:
+                    // view de la imagen del avatar
+                    EmptyView()
+                case .followers:
+                    // view de lista de followers
+                    EmptyView()
+                case nil:
+                    EmptyView()
+                }
+            }
         }
         
         
